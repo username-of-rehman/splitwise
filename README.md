@@ -13,6 +13,13 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+### `node server.js`
+
+Runs the app in the development mode.\
+navigate to 'node-server' folder and then run command "node server.js"
+
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
 ### `npm test`
 
