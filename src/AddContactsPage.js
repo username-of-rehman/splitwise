@@ -1,5 +1,5 @@
-// src/AddContactsPage.js
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Typography, Container, Paper, List, ListItem, ListItemText } from '@mui/material';
 
@@ -9,13 +9,45 @@ const AddContactsPage = () => {
   const [email, setEmail] = useState('');
   const [number, setNumber] = useState('');
   const navigate = useNavigate();
+  const [requestData, setRequestData] = useState({
+    name: '',
+    email: '',
+    number: '',
+    expense: 500,
+  });
 
-  const addContact = () => {
-    const newContact = { name, email, number };
-    setContacts([...contacts, newContact]);
-    setName('');
-    setEmail('');
-    setNumber('');
+  const submitButtonHandler = () => {
+    // Update requestData with current state values
+    const updatedState = {
+      ...requestData,
+      name,
+      email,
+      number,
+    };
+  
+    console.log("hello", updatedState);
+  
+    // Make the API call
+    axios.post('http://localhost:3000/', updatedState, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => {
+        console.log(response.data);
+        // Handle the response as needed
+      })
+      .catch(error => {
+        console.error(error);
+        // Handle errors as needed
+      });
+
+      setContacts(prevContacts => [...prevContacts, updatedState]);
+
+      // Clear the input fields after adding a contact
+      setName('');
+      setEmail('');
+      setNumber('');
   };
 
   const goToCreateGroup = () => {
@@ -23,6 +55,7 @@ const AddContactsPage = () => {
   };
 
   return (
+    <div>hello
     <Container component="main" maxWidth="xs">
       <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
         <Typography variant="h5" component="div" mb={2}>
@@ -56,7 +89,7 @@ const AddContactsPage = () => {
           mb={2}
         />
 
-        <Button variant="contained" color="primary" onClick={addContact} mb={2}>
+        <Button variant="contained" color="primary" onClick={submitButtonHandler} mb={2}>
           Add Contact
         </Button>
 
@@ -76,6 +109,7 @@ const AddContactsPage = () => {
         </Button>
       </Paper>
     </Container>
+    </div>
   );
 };
 

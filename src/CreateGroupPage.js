@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, TextField, Typography, Container, Paper, Checkbox, FormControlLabel } from '@mui/material';
+import axios from 'axios';
+
 
 const CreateGroupPage = () => {
     const location = useLocation();
@@ -14,30 +16,47 @@ const CreateGroupPage = () => {
 
     const contacts = location.state?.contacts || [];
 
-    const addExpense = () => {
+    const addExpense = async () => {
         // Check if expense amount is provided
         if (!expenseAmount || isNaN(expenseAmount)) {
             alert('Please enter a valid expense amount.');
             return;
         }
-
+    
         const expense = parseFloat(expenseAmount);
         if (expense <= 0) {
             alert('Expense amount should be greater than zero.');
             return;
         }
-
+    
         // Calculate share for each selected contact
         const sharePerContact = expense / selectedContacts.length;
-
+    
         // Display the result
-        setExpenseDetails({
+        const updatedExpenseDetails = {
             groupName,
             selectedContacts,
             expense: expense.toFixed(2),
             shares: selectedContacts.map((contact) => `${contact}: ${sharePerContact.toFixed(2)}`),
-        });
+        };
+    
+        setExpenseDetails(updatedExpenseDetails);
+    
+        try {
+            const response = await axios.post('http://localhost:3000/create-group', updatedExpenseDetails, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            console.log(response.data);
+            // Handle the response as needed
+        } catch (error) {
+            console.error(error);
+            // Handle errors as needed
+        }
     };
+    
 
     return (
         <Container component="main" maxWidth="xs">
